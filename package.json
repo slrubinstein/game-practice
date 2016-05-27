@@ -1,0 +1,18 @@
+{
+  "name": "snake",
+  "version": "1.0.0",
+  "description": "snake written in javascript",
+  "main": "app.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "author": "Steve Rubinstein",
+  "license": "ISC",
+  "devDependencies": {
+    "browserify": "^13.0.1",
+    "gulp": "^3.9.1",
+    "gulp-watch": "^4.3.6",
+    "jasmine": "^2.4.1",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}
