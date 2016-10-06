@@ -1,8 +1,6 @@
 'use strict';
 
-var Drawable = function(collision) {
-	
-};
+var Drawable = function() {};
 
 Drawable.prototype.draw = function(ctx) {
 	ctx.fillStyle = this.color;

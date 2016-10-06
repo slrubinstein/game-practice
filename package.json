@@ -1,7 +1,7 @@
 {
-  "name": "snake",
+  "name": "game",
   "version": "1.0.0",
-  "description": "snake written in javascript",
+  "description": "practice writing a game in javascript",
   "main": "app.js",
   "scripts": {
     "test": "jasmine"
@@ -14,5 +14,8 @@
     "gulp-watch": "^4.3.6",
     "jasmine": "^2.4.1",
     "vinyl-source-stream": "^1.1.0"
+  },
+  "dependencies": {
+    "tween.js": "^16.3.5"
   }
 }

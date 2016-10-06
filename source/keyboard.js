@@ -1,9 +1,22 @@
 'use strict';
 
+var timer = null;
+
+var usableKeys = [37, 38, 39, 40, 80];
+
 var keyboard = {
 
 	handleKey: function(actor, event) {
+
 		var keyCode = event.keyCode;
+
+		if (usableKeys.indexOf(keyCode) > -1) {
+			event.preventDefault();
+		}
+
+		if (timer) {
+			return;
+		}
 
 		switch(keyCode) {
 			case 37:
@@ -23,6 +36,7 @@ var keyboard = {
 				break;
 		}
 
+		timer = setTimeout(() => timer = null, 100);
 	}
 
 };

@@ -6,5 +6,5 @@ window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequest
 
 window.addEventListener('load', function() {
 	var game = new Game;
-	game.init();
+	game.init('level10');
 });

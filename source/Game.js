@@ -1,24 +1,26 @@
 'use strict';
 
-var Player = require('./Player');
-var world = require('./world');
+const Player = require('./Player');
+var World = require('./World');
 var keyboard = require('./keyboard');
-var Bush = require('./Bush');
+var Enemy = require('./Enemy');
 var Map = require('./Map');
-var level1 = require('./assets/level1.json');
+var MapStore = require('./MapStore');
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 
 var Game = function() {
-	canvas.width = world.width;
-	canvas.height = world.height;
-
+	this.width = World.width;
+	this.height = World.height + World.textAreaSize;
 	this.actors = [];
+
+	canvas.width = this.width;
+	canvas.height = this.height;
 };
 
-Game.prototype.init = function() {
-	this.player = new Player;
-	this.map = new Map(level1);
+Game.prototype.init = function(level) {
+	this.player = new Player(this);
+	this.map = new Map(MapStore[level], this);
 
 	this.actors.push(this.player);
 
@@ -33,27 +35,49 @@ Game.prototype.initKeyboard = function(actor) {
 
 Game.prototype.drawWorld = function() {
 	ctx.fillStyle = 'green';
-	ctx.fillRect(0, 0, world.width, world.height);	
+	ctx.fillRect(0, 0, World.width, World.height);
 };
 
-Game.prototype.movePlayer = function() {
-	this.player.move();
+Game.prototype.getNewMap = function(direction) {
+	var nextMap = this.map.exits[direction];
+	this.map = new Map(MapStore[nextMap], this);
+};
+
+Game.prototype.moveEnemies = function() {
+	var enemies = this.getEnemies();
+	enemies.forEach(enemy => enemy.moveEnemy(this.player));
+};
+
+Game.prototype.getEnemies = function() {
+	return this.actors.filter(actor => actor instanceof Enemy);
 };
 
 Game.prototype.drawActors = function() {
 	this.actors.forEach(function(actor) {
 		actor.draw(ctx);
 	});
+};
+
+Game.prototype.writeText = function() {
+	ctx.fillStyle = 'black';
+	ctx.font = '24px sans-serif';
+	ctx.fillText(
+		'hp: ' + this.player.hp + ' ' +
+		'exp: ' + this.player.experience,
+		10, 450
+	);
+	var enemies = this.getEnemies();
+	enemies.forEach(enemy => ctx.fillText(enemy.hp, enemy.x, enemy.y + 24));
 
 };
 
 Game.prototype.update = function() {
-	ctx.clearRect(0, 0, world.width, world.height);
+	ctx.clearRect(0, 0, this.width, this.height);
 	this.drawWorld();
 	this.map.drawMap(ctx);
-	this.movePlayer();
+	this.moveEnemies();
 	this.drawActors();
-	requestAnimationFrame(this.update.bind(this));
+	this.writeText();
 };
 
 module.exports = Game;
