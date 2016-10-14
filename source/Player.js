@@ -6,6 +6,7 @@ var CollisionDetector = require('./CollisionDetector');
 var Combat = require('./Combat');
 var Interactions = require('./constants/Interactions');
 var MathUtils = require('./utils/MathUtils');
+var Gold = require('./Gold');
 
 var Player = function(game) {
 	this.game = game;
@@ -21,6 +22,8 @@ var Player = function(game) {
 	this.defense = 6;
 	this.experience = 0;
 	this.level = 1;
+	this.inventory = [];
+	this.gold = 0;
 
 	Movable.call(this);
 };
@@ -81,7 +84,23 @@ Player.prototype.handleCollision = function(collision) {
 		case 'attack':
 			this.attack(collision);
 			break;
+		case 'pickup':
+			this.pickUp(collision);
 	}
+};
+
+Player.prototype.pickUp = function(item) {
+	this.inventory.push(item);
+	this.combineGold();
+	item.removeFromMap();
+	this.move();
+};
+
+Player.prototype.combineGold = function() {
+	this.gold = this.inventory
+		.filter(item => item instanceof Gold)
+		.map(item => item.amount)
+		.reduce((prev, curr) => prev + curr, 0);
 };
 
 Player.prototype.movePlayerToNewPosition = function(position) {

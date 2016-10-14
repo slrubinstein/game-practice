@@ -1,6 +1,7 @@
 var Rock = require('../scenery/Rock');
 var Water = require('../scenery/Water');
 var Enemy = require('../Enemy');
+var Gold = require('../Gold');
 
 var Interactions = {
   getInteractionType(type) {
@@ -15,6 +16,10 @@ var Interactions = {
 
     if (type instanceof Enemy) {
       return 'attack';
+    }
+
+    if (type instanceof Gold) {
+      return 'pickup'
     }
 
   }

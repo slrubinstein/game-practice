@@ -30,6 +30,11 @@ Map.prototype.drawBackground = function(ctx) {
 	ctx.fillRect(0, 0, World.width, World.height);
 };
 
+Map.prototype.addNewItem = function(item) {
+	this.scenery.push(item);
+	item.draw(this.game.ctx);
+};
+
 Map.prototype.drawScenery = function(ctx) {
 	this.scenery.forEach(function(item) {
 		item.draw(ctx);

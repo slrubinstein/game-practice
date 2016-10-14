@@ -13,6 +13,7 @@ var Game = function() {
 	this.width = World.width;
 	this.height = World.height + World.textAreaSize;
 	this.actors = [];
+	this.ctx = ctx;
 
 	canvas.width = this.width;
 	canvas.height = this.height;
@@ -34,8 +35,8 @@ Game.prototype.initKeyboard = function(actor) {
 };
 
 Game.prototype.drawWorld = function() {
-	ctx.fillStyle = 'green';
-	ctx.fillRect(0, 0, World.width, World.height);
+	this.ctx.fillStyle = 'green';
+	this.ctx.fillRect(0, 0, World.width, World.height);
 };
 
 Game.prototype.getNewMap = function(direction) {
@@ -54,27 +55,28 @@ Game.prototype.getEnemies = function() {
 
 Game.prototype.drawActors = function() {
 	this.actors.forEach(function(actor) {
-		actor.draw(ctx);
-	});
+		actor.draw(this.ctx);
+	}, this);
 };
 
 Game.prototype.writeText = function() {
-	ctx.fillStyle = 'black';
-	ctx.font = '24px sans-serif';
-	ctx.fillText(
+	this.ctx.fillStyle = 'black';
+	this.ctx.font = '24px sans-serif';
+	this.ctx.fillText(
 		'hp: ' + this.player.hp + ' ' +
-		'exp: ' + this.player.experience,
+		'exp: ' + this.player.experience + ' ' +
+		'gold: ' + this.player.gold,
 		10, 450
 	);
 	var enemies = this.getEnemies();
-	enemies.forEach(enemy => ctx.fillText(enemy.hp, enemy.x, enemy.y + 24));
+	enemies.forEach(enemy => this.ctx.fillText(enemy.hp, enemy.x, enemy.y + 24));
 
 };
 
 Game.prototype.update = function() {
-	ctx.clearRect(0, 0, this.width, this.height);
+	this.ctx.clearRect(0, 0, this.width, this.height);
 	this.drawWorld();
-	this.map.drawMap(ctx);
+	this.map.drawMap(this.ctx);
 	this.moveEnemies();
 	this.drawActors();
 	this.writeText();

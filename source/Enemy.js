@@ -6,6 +6,7 @@ var World = require('./World');
 var CollisionDetector = require('./CollisionDetector');
 var Combat = require('./Combat');
 var MathUtils = require('./utils/MathUtils');
+var Gold = require('./Gold');
 
 var directions = ['north', 'south', 'east', 'west', null];
 
@@ -14,9 +15,14 @@ var Enemy = function(options) {
   this.strength = options.strength;
   this.defense = options.defense;
   this.level = options.level;
+  this.gold = this.createGold();
 };
 
 Enemy.prototype = new Movable;
+
+Enemy.prototype.createGold = function() {
+  return MathUtils.randomNumberBetween(0, 3) * this.level;
+};
 
 Enemy.prototype.moveEnemy = function(player) {
   this.moveCondition(player);
@@ -45,7 +51,15 @@ Enemy.prototype.attack = function(player) {
 };
 
 Enemy.prototype.die = function() {
+  this.dropGold();
   this.game.actors.splice(this.game.actors.indexOf(this), 1);
+};
+
+Enemy.prototype.dropGold = function() {
+  if (this.gold) {
+    var newGold = new Gold(this.x, this.y, this.gold, this.game);
+    this.game.map.addNewItem(newGold);
+  }
 };
 
 module.exports = Enemy;
